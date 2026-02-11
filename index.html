@@ -56,15 +56,15 @@
                 <div class="relative float">
                     <div class="glass rounded-3xl p-8 glow">
                         <div class="text-center mb-6">
-                            <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl animate-pulse">🎙️</div>
-                            <h3 class="text-xl font-bold text-white">AI Voice Assistant</h3>
-                            <p class="text-slate-400 text-sm">Click to speak with our AI!</p>
+                            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl">💬</div>
+                            <h3 class="text-xl font-bold text-white">AI Chat Assistant</h3>
+                            <p class="text-slate-400 text-sm">Type to chat with our AI!</p>
                         </div>
                         <div class="space-y-3">
-                            <div onclick="openWidget()" class="flex items-center space-x-3 p-3 bg-white/5 hover:bg-white/10 rounded-xl cursor-pointer transition"><span class="text-xl">🔥</span><span class="text-slate-300 text-sm">Boiler not working</span></div>
-                            <div onclick="openWidget()" class="flex items-center space-x-3 p-3 bg-white/5 hover:bg-white/10 rounded-xl cursor-pointer transition"><span class="text-xl">💧</span><span class="text-slate-300 text-sm">Leaking pipe</span></div>
-                            <div onclick="openWidget()" class="flex items-center space-x-3 p-3 bg-white/5 hover:bg-white/10 rounded-xl cursor-pointer transition"><span class="text-xl">🚿</span><span class="text-slate-300 text-sm">No hot water</span></div>
-                            <div onclick="openWidget()" class="flex items-center space-x-3 p-3 bg-white/5 hover:bg-white/10 rounded-xl cursor-pointer transition"><span class="text-xl">📅</span><span class="text-slate-300 text-sm">Book service</span></div>
+                            <div onclick="quickMsg('Boiler not working')" class="flex items-center space-x-3 p-3 bg-white/5 hover:bg-white/10 rounded-xl cursor-pointer transition"><span class="text-xl">🔥</span><span class="text-slate-300 text-sm">Boiler not working</span></div>
+                            <div onclick="quickMsg('Leaking pipe')" class="flex items-center space-x-3 p-3 bg-white/5 hover:bg-white/10 rounded-xl cursor-pointer transition"><span class="text-xl">💧</span><span class="text-slate-300 text-sm">Leaking pipe</span></div>
+                            <div onclick="quickMsg('No hot water')" class="flex items-center space-x-3 p-3 bg-white/5 hover:bg-white/10 rounded-xl cursor-pointer transition"><span class="text-xl">🚿</span><span class="text-slate-300 text-sm">No hot water</span></div>
+                            <div onclick="quickMsg('Book service')" class="flex items-center space-x-3 p-3 bg-white/5 hover:bg-white/10 rounded-xl cursor-pointer transition"><span class="text-xl">📅</span><span class="text-slate-300 text-sm">Book service</span></div>
                         </div>
                     </div>
                 </div>
@@ -175,24 +175,99 @@
         <p class="text-slate-500">© 2025 Top Plumber NYC. Licensed & Insured | 24/7 Emergency</p>
     </footer>
 
-    <!-- ElevenLabs Conversational AI Widget -->
-    <elevenlabs-convai agent-id="agent_8101kh7hdg8rfkqrktan6dwpkzc8"></elevenlabs-convai>
-    <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-
-    <!-- Voice Button Trigger -->
+    <!-- Chat Widget -->
     <div class="fixed bottom-6 right-6 z-50">
-        <button onclick="openWidget()" class="cursor-pointer w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center shadow-[0_10px_40px_rgba(168,85,247,0.5)] hover:scale-110 transition-all animate-pulse">
+        <button onclick="toggleChat()" class="cursor-pointer w-16 h-16 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-[0_10px_40px_rgba(59,130,246,0.5)] hover:scale-110 transition-all">
             <span class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[#0f172a]"></span>
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
         </button>
+        
+        <div id="chatWindow" class="hidden fixed bottom-24 right-6 w-[380px] h-[550px] glass rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-xl">💬</div>
+                    <div><h4 class="font-bold text-white text-sm">Top Plumber Chat</h4><div class="flex items-center text-[10px] text-white/70"><span class="w-1.5 h-1.5 bg-green-400 rounded-full mr-1"></span>AI Assistant</div></div>
+                </div>
+                <button onclick="toggleChat()" class="p-2 text-white/80 hover:text-white transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            </div>
+            <div class="bg-white/5 p-3 border-b border-white/10 flex gap-2 overflow-x-auto">
+                <button onclick="quickMsg('Boiler issue')" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 rounded-full text-xs text-slate-300 whitespace-nowrap">🔥 Boiler</button>
+                <button onclick="quickMsg('Leaking')" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 rounded-full text-xs text-slate-300 whitespace-nowrap">💧 Leak</button>
+                <button onclick="quickMsg('No hot water')" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 rounded-full text-xs text-slate-300 whitespace-nowrap">🚿 Hot Water</button>
+                <button onclick="quickMsg('Book appointment')" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 rounded-full text-xs text-slate-300 whitespace-nowrap">📅 Book</button>
+            </div>
+            <div id="chatMsgs" class="flex-1 overflow-y-auto p-4 space-y-3 bg-black/20"></div>
+            <form id="chatForm" class="p-4 bg-white/5 border-t border-white/10">
+                <div class="flex gap-2">
+                    <input type="text" id="chatInput" placeholder="Type your message..." class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
+                    <button type="submit" class="w-12 h-12 rounded-xl bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></button>
+                </div>
+            </form>
+            <div class="p-3 bg-red-500/10 border-t border-red-500/20">
+                <a href="tel:1-800-555-0123" class="flex items-center justify-center space-x-2 w-full py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl font-semibold transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    <span>Emergency Call</span>
+                </a>
+            </div>
+        </div>
     </div>
 
     <script>
-        function openWidget() {
-            // Trigger ElevenLabs widget
-            const event = new CustomEvent('elevenlabs-widget-open');
-            window.dispatchEvent(event);
+        const responses = {
+            'boiler': "🔧 For boiler issues, we offer same-day repairs and installation. Our licensed technicians can diagnose and fix all boiler brands. Would you like to book an appointment? Call 📞 1-800-555-0123 for immediate assistance.",
+            'leak': "💧 Leaking pipes need urgent attention to prevent water damage. We can be at your location within hours. For emergencies, call 📞 1-800-555-0123 now!",
+            'hot water': "🚿 No hot water could be caused by your boiler, water heater, or plumbing issue. Our team can diagnose and fix it today. Book online or call 📞 1-800-555-0123.",
+            'book': "📅 To book a service, please fill out the quote form above or call us directly at 📞 1-800-555-0123. We offer same-day appointments!",
+            'price': "💰 We offer upfront, transparent pricing with no hidden fees. Get a free quote by filling out the form above or calling us.",
+            'emergency': "🚨 For emergencies, call 📞 1-800-555-0123 immediately. We offer 24/7 emergency service across NYC.",
+            'hvac': "❄️🔥 Our HVAC services include installation, repair, and maintenance for heating and cooling systems. Book online or call for expert help!",
+            'default': "Hi! I'm the Top Plumber NYC AI assistant. I can help with boilers, leaks, hot water, HVAC, and plumbing questions. For immediate help, call 📞 1-800-555-0123."
+        };
+
+        function toggleChat() {
+            const win = document.getElementById('chatWindow');
+            win.classList.toggle('hidden');
+            if (!win.classList.contains('hidden')) {
+                addMsg("Hi! 👋 I'm your Top Plumber NYC assistant. Type your question or click a quick option below!", false);
+            }
         }
+
+        function quickMsg(text) {
+            document.getElementById('chatInput').value = text;
+            sendMessage();
+        }
+
+        function addMsg(text, isUser) {
+            const msgs = document.getElementById('chatMsgs');
+            msgs.innerHTML += `<div class="flex ${isUser?'justify-end':'justify-start'}"><div class="max-w-[85%] p-3 rounded-2xl ${isUser?'bg-blue-600 text-white':'glass text-slate-200'} text-sm">${text}</div></div>`;
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            addMsg(text, true);
+            input.value = '';
+            
+            setTimeout(() => {
+                const l = text.toLowerCase();
+                let resp = responses.default;
+                
+                if (l.includes('boiler')) resp = responses.boiler;
+                else if (l.includes('leak') || l.includes('water')) resp = responses.leak;
+                else if (l.includes('hot') || l.includes('heat')) resp = responses['hot water'];
+                else if (l.includes('book') || l.includes('appointment')) resp = responses.book;
+                else if (l.includes('price') || l.includes('cost') || l.includes('quote')) resp = responses.price;
+                else if (l.includes('emergency') || l.includes('urgent')) resp = responses.emergency;
+                else if (l.includes('hvac') || l.includes('cool') || l.includes('air')) resp = responses.hvac;
+                
+                addMsg(resp, false);
+            }, 500);
+        }
+
+        document.getElementById('chatForm').onsubmit = e => { e.preventDefault(); sendMessage(); };
     </script>
 </body>
 </html>
